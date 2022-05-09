@@ -17,6 +17,14 @@ spec:
       containers:
       - name: httpd-jtest
         image: docker.io/chenjiayu123/httpd-24-8080:6.0
+        volumeMounts:
+          - mountPath: /var/www/html/index.html
+            name: httpd-index
+            subPath: index.html
       imagePullPolicy: Always
       imagePullSecrets:
       - name: dockerhub
+      volumes:
+        - name: httpd-index
+          configMap:
+            name: httpd-index-configmap
