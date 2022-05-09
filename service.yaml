@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpd-jtest-service
+spec:
+  selector:
+    app: httpd-jtest
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - protocol: TCP
+      port: 8443
+      targetPort: 8443

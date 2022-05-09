@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-deployment
+  labels:
+    app: httpd-jtest
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: httpd-jtest
+  template:
+    metadata:
+      labels:
+        app: httpd-jtest
+    spec:
+      containers:
+      - name: httpd-jtest
+        image: docker.io/chenjiayu123/httpd-24-8080:6.0
+      imagePullPolicy: Always
+      imagePullSecrets:
+      - name: dockerhub
