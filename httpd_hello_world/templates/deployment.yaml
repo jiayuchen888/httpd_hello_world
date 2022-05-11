@@ -1,61 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "httpd_hello_world.fullname" . }}
+  name: {{ .Release.Name }}-httpd-deployment
   labels:
-    {{- include "httpd_hello_world.labels" . | nindent 4 }}
+    app: httpd-jtest
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  replicas: 1 
   selector:
     matchLabels:
-      {{- include "httpd_hello_world.selectorLabels" . | nindent 6 }}
+      app: httpd-jtest
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
-        {{- include "httpd_hello_world.selectorLabels" . | nindent 8 }}
+        app: httpd-jtest
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "httpd_hello_world.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      - name: httpd-jtest
+        image: docker.io/chenjiayu123/httpd-24-8080:6.0
+        volumeMounts:
+          - mountPath: /var/www/html/index.html
+            name: httpd-index
+            subPath: index.html
+      imagePullPolicy: Always
+      imagePullSecrets:
+      - name: dockerhub
+      volumes:
+        - name: httpd-index
+          configMap:
+            name: {{ .Release.Name }}-httpd-index-configmap

@@ -1,15 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "httpd_hello_world.fullname" . }}
-  labels:
-    {{- include "httpd_hello_world.labels" . | nindent 4 }}
+  name: {{ .Release.Name }}-httpd-jtest-service
 spec:
-  type: {{ .Values.service.type }}
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
   selector:
-    {{- include "httpd_hello_world.selectorLabels" . | nindent 4 }}
+    app: httpd-jtest
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
