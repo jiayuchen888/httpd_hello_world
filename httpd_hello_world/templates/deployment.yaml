@@ -5,7 +5,7 @@ metadata:
   labels:
     app: httpd-jtest
 spec:
-  replicas: 1 
+  replicas: {{ .Values.replicas | default 1 }} 
   selector:
     matchLabels:
       app: httpd-jtest
@@ -16,15 +16,15 @@ spec:
     spec:
       containers:
       - name: httpd-jtest
-        image: docker.io/chenjiayu123/httpd-24-8080:6.0
+        image: {{ .Values.images.imageName }}
         volumeMounts:
           - mountPath: /var/www/html/index.html
-            name: httpd-index
+            name: {{ .Release.Name}}-httpd-index
             subPath: index.html
-      imagePullPolicy: Always
+        imagePullPolicy: Always
       imagePullSecrets:
-      - name: dockerhub
+      - name: {{ .Values.images.imagePullSecret }}
       volumes:
-        - name: httpd-index
+        - name: {{ .Release.Name}}-httpd-index
           configMap:
             name: {{ .Release.Name }}-httpd-index-configmap

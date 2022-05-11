@@ -1,11 +1,11 @@
-apiVersion: v1
+apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: {{ .Release.Name }}-httpd-jtest
   labels:
     epfl.ch/visibility: public
 spec:
-  host: hello-from-sre1.epfl.ch
+  host: {{ .Release.Name }}-hello-from-sre1.epfl.ch
   port:
     targetPort: 8080
   tls:

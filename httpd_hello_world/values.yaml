@@ -1,1 +1,12 @@
-welcomeMessage: "Welcome"
+welcomeMessage: "Welcome to httpd-24 Helm Charts"
+
+service:
+  port: 8080
+  targetPort: 8080
+
+replicas: 1
+
+images:
+  imageName: docker.io/chenjiayu123/httpd-24-8080:6.0
+  imagePullSecret: dockerhub 
+
